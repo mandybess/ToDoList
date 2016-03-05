@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.firebase.client.Firebase;
 import com.rahobbs.todo.database.TodoBaseHelper;
@@ -20,6 +21,7 @@ import java.util.UUID;
  */
 public class TodoLab {
     private static TodoLab sTodoLab;
+    Firebase ref = new Firebase(Constants.FIREBASE_URL + "/tasks");
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
@@ -56,6 +58,10 @@ public class TodoLab {
         String uuidString = todoId.toString();
 
         mDatabase.delete(TodoTable.NAME, TodoTable.Cols.UUID + " = ?", new String[] {uuidString});
+
+        //TODO Make this work
+        Firebase todoRef = new Firebase(Constants.FIREBASE_URL +"/" + todoId.toString());
+        todoRef.removeValue();
     }
 
     public List<TodoItem> getItems() {
@@ -101,6 +107,10 @@ public class TodoLab {
         mDatabase.update(TodoTable.NAME, values,
                 TodoTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
+;
+        Log.v("DETAIL_SAVE", todoItem.getID().toString());
+        Log.v("DETAIL_SAVE", todoItem.getTitle());
+        ref.child(todoItem.getID().toString()).setValue(todoItem);
     }
 
     private TodoCursorWrapper queryTodoItems(String whereClause, String[] whereArgs) {

@@ -127,11 +127,7 @@ public class TodoFragment extends Fragment {
             UUID mTodoID = mTodo.getID();
             TodoLab.get(getActivity()).deleteTodoItem(mTodoID);
         }
-
         TodoLab.get(getActivity()).updateItem(mTodo);
-        Log.v("DETAIL_SAVE", mTodo.getID().toString());
-        Log.v("DETAIL_SAVE", mTodo.getTitle());
-        ref.child(mTodo.getID().toString()).setValue(mTodo);
     }
 
     @Override
