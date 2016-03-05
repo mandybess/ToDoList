@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.rahobbs.todo.helpers.Constants;
 import com.rahobbs.todo.helpers.Feedback;
 import com.rahobbs.todo.R;
 import com.rahobbs.todo.helpers.TodoItem;
@@ -42,10 +44,9 @@ public class TodoFragment extends Fragment {
     private static final String ARG_TODO_ID = "todoId";
     private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
-
+    Firebase ref = new Firebase(Constants.FIREBASE_URL + "/tasks");
     private TodoItem mTodo;
     private EditText mTitle;
-    private EditText mDetails;
     private TextView mDueDateTextField;
     private CheckBox mCompletedCheckbox;
     private LinearLayout mDateComponents;
@@ -117,12 +118,11 @@ public class TodoFragment extends Fragment {
 
     @Override
     public void onPause() {
-        saveNewItem();
-        Log.v("DETAIL_PAUSE", mTodo.getID().toString());
+        saveTodoItem();
         super.onPause();
     }
 
-    private void saveNewItem() {
+    private void saveTodoItem() {
         if (mTodo.getTitle() == null) {
             UUID mTodoID = mTodo.getID();
             TodoLab.get(getActivity()).deleteTodoItem(mTodoID);
@@ -130,6 +130,8 @@ public class TodoFragment extends Fragment {
 
         TodoLab.get(getActivity()).updateItem(mTodo);
         Log.v("DETAIL_SAVE", mTodo.getID().toString());
+        Log.v("DETAIL_SAVE", mTodo.getTitle());
+        ref.child(mTodo.getID().toString()).setValue(mTodo);
     }
 
     @Override
@@ -139,7 +141,7 @@ public class TodoFragment extends Fragment {
         mTitle = (EditText) v.findViewById(R.id.todo_title);
 
         if (mTodo.isCompleted()) {
-            mTitle.setTextColor(getResources().getColor(R.color.inactiveText));
+            mTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.inactiveText));
         }
 
         mTitle.setFocusable(true);
@@ -181,9 +183,9 @@ public class TodoFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mTodo.setCompleted(isChecked);
                 if (isChecked) {
-                    mTitle.setTextColor(getResources().getColor(R.color.inactiveText));
+                    mTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.inactiveText));
                 } else {
-                    mTitle.setTextColor(getResources().getColor(R.color.darkFont));
+                    mTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.darkFont));
                 }
             }
         });
@@ -193,7 +195,7 @@ public class TodoFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveNewItem();
+                saveTodoItem();
                 Log.v("DETAIL_CLICK_SAVE", mTodo.getID().toString());
                 getActivity().finish();
                 //navigateUpFromSameTask(getActivity());

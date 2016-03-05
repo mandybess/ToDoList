@@ -27,24 +27,9 @@ public class TodoItem {
         mDate = new Date();
     }
 
-    public boolean isCompleted() {
+    public UUID getID() {
 
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-
-        this.completed = completed;
-    }
-
-    public Date getDate() {
-
-        return mDate;
-    }
-
-    public void setDate(Date date) {
-
-        mDate = date;
+        return mID;
     }
 
     public String getTitle() {
@@ -57,9 +42,24 @@ public class TodoItem {
         mTitle = title;
     }
 
-    public UUID getID() {
+    public Date getDate() {
 
-        return mID;
+        return mDate;
+    }
+
+    public void setDate(Date date) {
+
+        mDate = date;
+    }
+
+    public boolean isCompleted() {
+
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+
+        this.completed = completed;
     }
 
     public String getDetails() {

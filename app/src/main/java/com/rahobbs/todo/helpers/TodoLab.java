@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.firebase.client.Firebase;
 import com.rahobbs.todo.database.TodoBaseHelper;
 import com.rahobbs.todo.database.TodoCursorWrapper;
 import com.rahobbs.todo.database.TodoSchema.TodoTable;
@@ -48,7 +49,6 @@ public class TodoLab {
 
     public void addTodoItem(TodoItem item) {
         ContentValues values = getContentValues(item);
-
         mDatabase.insert(TodoTable.NAME, null, values);
     }
 
